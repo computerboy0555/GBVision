@@ -1,6 +1,6 @@
 from .recording_window import RecordingWindow
 from .opencv_window import OpenCVWindow
-from gbvision.constants.system import EMPTY_PIPELINE
+from gbvision.models.system import EMPTY_PIPELINE
 from os.path import splitext
 import cv2
 from gbvision.constants.video import VIDEO_FILE_TYPE
@@ -16,6 +16,7 @@ class RecordingOpenCVWindow(OpenCVWindow, RecordingWindow):
     :param fps: the fps of the video file
     :param recording_pipeline: optional, a drawing pipeline to run on the frames being recorded
     """
+
     def __init__(self, window_name: str, file_name: str, fps=20.0, exit_button='qQ',
                  drawing_pipeline=EMPTY_PIPELINE, recording_pipeline=EMPTY_PIPELINE, width=0, height=0,
                  flags=cv2.WINDOW_FREERATIO):
@@ -39,6 +40,8 @@ class RecordingOpenCVWindow(OpenCVWindow, RecordingWindow):
         self.height = height
 
     def _record(self, frame):
+        if frame is None or len(frame.shape) == 0:
+            return
         if self.video_writer is None:
             width = self.width if self.width != 0 else frame.shape[1]
             height = self.height if self.height != 0 else frame.shape[0]

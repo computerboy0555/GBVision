@@ -1,6 +1,6 @@
 import abc
 
-from gbvision.constants.system import EMPTY_PIPELINE
+from gbvision.models.system import EMPTY_PIPELINE
 from gbvision.constants.types import Frame
 
 
@@ -78,3 +78,7 @@ class Window(abc.ABC):
         """
         self._close()
         self._is_opened = False
+
+
+    def __del__(self):
+        self.close()

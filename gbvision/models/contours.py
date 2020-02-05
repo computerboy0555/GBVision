@@ -8,9 +8,14 @@ from gbvision.constants.types import Contour, Polygon
 from gbvision.utils.pipeline import PipeLine
 
 
+def __mapper(func) -> PipeLine:
+    return PipeLine(lambda x: list(map(func, x)))
+
 @PipeLine
 def find_contours(frame):
-    return cv2.findContours(frame, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[CONTOURS_INDEX]
+    # DO NOT CHANGE THE CHAIN_APPROX_NONE
+    # You do not know the damages it may cause
+    return cv2.findContours(frame, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)[CONTOURS_INDEX]
 
 
 @PipeLine
@@ -26,9 +31,7 @@ class FilterContours(PipeLine):
 convex_hull = PipeLine(cv2.convexHull)
 
 
-@PipeLine
-def convex_hull_multiple(cnts):
-    return list(map(convex_hull, cnts))
+convex_hull_multiple = __mapper(convex_hull)
 
 
 @PipeLine
@@ -37,16 +40,12 @@ def contour_center(cnt):
     return int(m['m10'] / (m['m00'] + EPSILON)), int(m['m01'] / (m['m00'] + EPSILON))
 
 
-@PipeLine
-def contours_centers(cnts):
-    return list(map(contour_center, cnts))
+contours_centers = __mapper(contour_center)
 
 
 # SHAPES
 
-@PipeLine
-def contours_to_rects(cnts):
-    return list(map(cv2.boundingRect, cnts))
+contours_to_rects = __mapper(cv2.boundingRect)
 
 
 @PipeLine
@@ -57,9 +56,7 @@ def sort_rects(rects):
 contours_to_rects_sorted = contours_to_rects + sort_rects
 
 
-@PipeLine
-def contours_to_circles(cnts):
-    return list(map(cv2.minEnclosingCircle, cnts))
+contours_to_circles = __mapper(cv2.minEnclosingCircle)
 
 
 @PipeLine
@@ -70,10 +67,7 @@ def sort_circles(circs):
 contours_to_circles_sorted = contours_to_circles + sort_circles
 
 
-@PipeLine
-def contours_to_rotated_rects(cnts):
-    return list(map(cv2.minAreaRect, cnts))
-
+contours_to_rotated_rects = __mapper(cv2.minAreaRect)
 
 @PipeLine
 def sort_rotated_rects(rects):
@@ -105,7 +99,7 @@ def contours_to_polygons(cnts):
 def fix_contours_shape(cnts: List[Contour]) -> List[Polygon]:
     """
     fixes the contours to a usable shape
-    the shape of the contours is a list of tuples of integers/floats, where eahc tuple is a point
+    the shape of the contours is a list of tuples of integers/floats, where each tuple is a point
     an example of two rectangles represented with this shape will be:
     [[(0, 0), (0, 2), (1, 2), (1, 0)],
     [(5, 4), (7, 4), (7, 9), (9, 5)]]

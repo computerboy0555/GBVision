@@ -2,23 +2,27 @@ from setuptools import setup
 
 setup(
     name='gbvision',
-    version='0.2.6',
+    version='0.7.2',
     description='A Python Vision Library for object tracking in the 3D physical space',
     license='Apache License 2.0',
     packages=['gbvision',
               'gbvision/utils',
-              'gbvision/net',
+              'gbvision/utils/net',
               'gbvision/constants',
               'gbvision/exceptions',
-              'gbvision/finders',
+              'gbvision/utils/finders',
               'gbvision/gui',
               'gbvision/models',
-              'gbvision/tools'],
+              'gbvision/tools',
+              'gbvision/utils/continuity',
+              'gbvision/utils/cameras',
+              'gbvision/utils/thresholds',
+              'gbvision/utils/shapes'],
     author='Ido Heinemann',
     author_email='idohaineman@gmail.com',
     keywords=['computer vision', 'frc', 'first', 'image processing'],
     url='https://github.com/GreenBlitz/GBVision',
-    download_url='https://github.com/GreenBlitz/GBVision/archive/v0.2.6-beta.tar.gz',
+    download_url='https://github.com/GreenBlitz/GBVision/archive/v0.7.2-beta.tar.gz',
     install_requires=[
         'numpy',
         'opencv-python',
@@ -31,9 +35,7 @@ setup(
         'Intended Audience :: Developers',  # Define that your audience are developers
 
         'Programming Language :: Python :: 3',  # Specify which python versions that you want to support
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7'
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
     ],
 )

@@ -12,16 +12,22 @@ class PipeLine:
     for example, creating a pipeline that adds 1 to it's output can be done in two ways:
     Example::
         inc = PipeLine(lambda x: x + 1)
+        three = inc(2)
         
     or
     Example::
         @PipeLine
         def inc(x):
             return x + 1
+        three = inc(2)
+
+
+    You can create a PipeLine from multiple functions:
+    Example::
+        open_and_read_file = PipeLine(open, lambda x: x.read())
+        text = open_and_read_file("file.txt")
             
-    when inheriting from the PipeLine class (to make a pipeline factory), the subclass cannot have any attributes or methods
-    so for example, to create a pipeline factory that generates adding functions:
-    this will not work:
+    You can also inherit from the PipeLine class to make a PipeLine factory:
     Example::
         class Adder(PipeLine):
             def __init__(self, num):
@@ -30,7 +36,7 @@ class PipeLine:
             def adding_func(self, item):
                 return item + self.num
 
-    instead we will implement it as follows:
+    You can also do it like this:
     Example::
         class Adder(PipeLine):
             def __init__(self, num):
@@ -39,13 +45,14 @@ class PipeLine:
 
                 PipeLine.__init__(self, adding_func)
 
-    """
-    def __init__(self, *functions: Callable[[Any], Any]):
-        """
-        initializes this pipeline
+    You can use combine a few PipeLines together to create function composition:
+    Example::
+        multiply_by_2_then_add_3 = PipeLine(lambda x: x * 2) + PipeLine(lambda x: x + 3)
 
-        :param functions: a tuple of functions to run one after the other as a pipeline
-        """
+    :param functions: a tuple of functions to run one after the other as a pipeline
+    """
+
+    def __init__(self, *functions: Callable[[Any], Any]):
         self.functions = list(functions)
 
     def __call__(self, image):
